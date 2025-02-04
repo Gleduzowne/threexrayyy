@@ -3,7 +3,14 @@ class Texture {
 
   Texture(this.imagePath);
 
-  void load() {
-    // Load texture from imagePath
+  Future<void> load() async {
+    try {
+      // Load texture from imagePath
+      await Future.delayed(Duration(milliseconds: 300));
+      // ...robust texture loading logic...
+    } catch (error) {
+      // Optionally log error
+      rethrow;
+    }
   }
 }

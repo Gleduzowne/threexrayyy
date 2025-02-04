@@ -16,4 +16,14 @@ class Renderer {
   void render3D(Mesh mesh) {
     mesh.render();
   }
+
+  void renderScene({
+    List<Sprite>? sprites,
+    List<Shape>? shapes,
+    List<Mesh>? meshes,
+  }) {
+    sprites?.forEach((sprite) => render2D(sprite));
+    shapes?.forEach((shape) => render2DShape(shape));
+    meshes?.forEach((mesh) => render3D(mesh));
+  }
 }
