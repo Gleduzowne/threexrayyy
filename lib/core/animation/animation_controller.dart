@@ -6,8 +6,7 @@ class CustomAnimationController {
   late AnimationController controller;
 
   CustomAnimationController(
-      {required this.vsync, Duration duration = const Duration(seconds: 5)})
-      : vsync = vsync {
+      {required this.vsync, Duration duration = const Duration(seconds: 5)}) {
     controller = AnimationController(vsync: vsync, duration: duration);
   }
 
