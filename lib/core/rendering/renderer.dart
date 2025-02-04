@@ -1,6 +1,6 @@
-import '../../models/2d/sprite.dart';
-import '../../models/2d/shape.dart';
-import '../../models/3d/mesh.dart';
+import 'package:threexrayyy/models/2d/sprite.dart';
+import 'package:threexrayyy/models/2d/shape.dart';
+import 'package:threexrayyy/models/3d/mesh.dart';
 
 class Renderer {
   // ...existing code...
