@@ -5,10 +5,19 @@ import 'extensions/chemistry_plugin.dart';
 import 'extensions/computer_plugin.dart';
 import 'extensions/mathematics_plugin.dart';
 import 'extensions/physics_plugin.dart';
+import 'extensions/external_plugin_loader.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  PluginManager manager = PluginManager();
+  manager.initializePlugins();
+
+  // Example external plugin loading.
+  // Replace the URI with the path to your external plugin Dart file.
+  await manager.loadExternalPlugin(Uri.parse(
+      'file:///home/nathfavour/Documents/code/gleduzowne/threexrayyy/external/my_plugin.dart'));
+
   runApp(MyApp());
-  PluginManager().initializePlugins();
 }
 
 class MyApp extends StatelessWidget {
@@ -33,11 +42,15 @@ class PluginManager {
   }
 
   void initializePlugins() {
-    // Register plugins. In a real-world scenario these
-    // could be dynamically discovered.
+    // Built-in plugins.
     registerPlugin(ChemistryPlugin());
     registerPlugin(ComputerPlugin());
     registerPlugin(MathematicsPlugin());
     registerPlugin(PhysicsPlugin());
+  }
+
+  Future<void> loadExternalPlugin(Uri pluginUri) async {
+    final loader = ExternalPluginLoader();
+    await loader.loadPlugin(pluginUri, (plugin) => _plugins.add(plugin));
   }
 }
