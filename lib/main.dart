@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '3D and 2D Animation Engine',
+      title: 'threexrayyy',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
