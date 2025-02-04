@@ -5,3 +5,7 @@ double calculateAspectRatio(Size size) {
 }
 
 // ...other utility functions...
+
+void clearScreen() {
+  // Clear the rendering screen
+}
