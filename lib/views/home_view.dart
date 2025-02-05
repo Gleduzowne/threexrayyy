@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import '../widgets/three_d_pane.dart';
 import '../widgets/mesh_controls.dart';
 
@@ -12,6 +15,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   Color _meshColor = Colors.green;
+  final GlobalKey _boundaryKey = GlobalKey(); // New key for capture
 
   Future<String?> _chooseFilePath(String title, String defaultName) async {
     String? path;
@@ -51,17 +55,24 @@ class _HomeViewState extends State<HomeView> {
   Future<void> _exportPNG() async {
     final filePath = await _chooseFilePath('Save PNG', 'mesh.png');
     if (filePath != null && filePath.isNotEmpty) {
-      // TODO: Replace with actual PNG export logic, e.g., capturing a RepaintBoundary.
-      print('Exporting PNG to $filePath');
-      // ...existing PNG export logic...
+      try {
+        RenderRepaintBoundary boundary = _boundaryKey.currentContext!
+            .findRenderObject() as RenderRepaintBoundary;
+        final ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+        final ByteData? byteData =
+            await image.toByteData(format: ui.ImageByteFormat.png);
+        final pngBytes = byteData!.buffer.asUint8List();
+        await File(filePath).writeAsBytes(pngBytes);
+        print('Exported PNG successfully to $filePath');
+      } catch (e) {
+        print('Error exporting PNG: $e');
+      }
     }
   }
 
   Future<void> _exportMP4() async {
     final filePath = await _chooseFilePath('Save MP4', 'mesh.mp4');
     if (filePath != null && filePath.isNotEmpty) {
-      // Dummy command to demonstrate ffmpeg CLI usage.
-      // In practice, you'd generate a series of frames and then run ffmpeg to create a video.
       final ffmpegCmd =
           'ffmpeg -y -f lavfi -i testsrc=duration=5:size=320x240:rate=30 $filePath';
       print('Running command: $ffmpegCmd');
@@ -116,7 +127,12 @@ class _HomeViewState extends State<HomeView> {
       ),
       body: Column(
         children: [
-          Expanded(child: ThreeDPane(meshColor: _meshColor)),
+          Expanded(
+            child: RepaintBoundary(
+              key: _boundaryKey,
+              child: ThreeDPane(meshColor: _meshColor),
+            ),
+          ),
           MeshControls(
             selectedColor: _meshColor,
             onColorChanged: (color) {
