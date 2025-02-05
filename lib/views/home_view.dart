@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../widgets/three_d_pane.dart';
 import '../widgets/mesh_controls.dart';
@@ -12,16 +13,65 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   Color _meshColor = Colors.green;
 
-  void _exportPNG() {
-    // TODO: Implement PNG export logic (e.g., using a RepaintBoundary).
-    // Placeholder:
-    print('Exporting PNG...');
+  Future<String?> _chooseFilePath(String title, String defaultName) async {
+    String? path;
+    await showDialog(
+      context: context,
+      builder: (context) {
+        final controller =
+            TextEditingController(text: '/your/path/$defaultName');
+        return AlertDialog(
+          title: Text(title, style: const TextStyle(fontSize: 10)),
+          content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(hintText: 'Enter full file path'),
+            style: const TextStyle(fontSize: 10),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel', style: TextStyle(fontSize: 10)),
+            ),
+            TextButton(
+              onPressed: () {
+                path = controller.text;
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK', style: TextStyle(fontSize: 10)),
+            ),
+          ],
+        );
+      },
+    );
+    return path;
   }
 
-  void _exportMP4() {
-    // TODO: Implement MP4 export logic (e.g., record a rotating animation).
-    // Placeholder:
-    print('Exporting MP4...');
+  Future<void> _exportPNG() async {
+    final filePath = await _chooseFilePath('Save PNG', 'mesh.png');
+    if (filePath != null && filePath.isNotEmpty) {
+      // TODO: Replace with actual PNG export logic, e.g., capturing a RepaintBoundary.
+      print('Exporting PNG to $filePath');
+      // ...existing PNG export logic...
+    }
+  }
+
+  Future<void> _exportMP4() async {
+    final filePath = await _chooseFilePath('Save MP4', 'mesh.mp4');
+    if (filePath != null && filePath.isNotEmpty) {
+      // Dummy command to demonstrate ffmpeg CLI usage.
+      // In practice, you'd generate a series of frames and then run ffmpeg to create a video.
+      final ffmpegCmd =
+          'ffmpeg -y -f lavfi -i testsrc=duration=5:size=320x240:rate=30 $filePath';
+      print('Running command: $ffmpegCmd');
+      final result = await Process.run('sh', ['-c', ffmpegCmd]);
+      if (result.exitCode == 0) {
+        print('Exported MP4 successfully to $filePath');
+      } else {
+        print('Failed to export MP4: ${result.stderr}');
+      }
+    }
   }
 
   @override
