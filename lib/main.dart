@@ -12,12 +12,11 @@ void main() async {
   PluginManager manager = PluginManager();
   manager.initializePlugins();
 
-  // Example external plugin loading.
-  // Replace the URI with the path to your external plugin Dart file.
-  await manager.loadExternalPlugin(Uri.parse(
-      'file:///home/nathfavour/Documents/code/gleduzowne/threexrayyy/external/my_plugin.dart'));
-
   runApp(MyApp());
+
+  // Load external plugin asynchronously after UI is displayed.
+  manager.loadExternalPlugin(Uri.parse(
+      'file:///home/nathfavour/Documents/code/gleduzowne/threexrayyy/plugins/my_plugin.dart'));
 }
 
 class MyApp extends StatelessWidget {
