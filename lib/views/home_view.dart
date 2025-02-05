@@ -1,23 +1,45 @@
 import 'package:flutter/material.dart';
 import '../widgets/three_d_pane.dart';
+import '../widgets/mesh_controls.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
+  const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  Color _meshColor = Colors.green;
+
+  void _exportPNG() {
+    // TODO: Implement PNG export logic (e.g., using a RepaintBoundary).
+    // Placeholder:
+    print('Exporting PNG...');
+  }
+
+  void _exportMP4() {
+    // TODO: Implement MP4 export logic (e.g., record a rotating animation).
+    // Placeholder:
+    print('Exporting MP4...');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home View'),
+        title: const Text('Home View'),
         actions: [
           PopupMenuButton<String>(
             onSelected: (value) {
               // ...handle menu selection...
             },
             itemBuilder: (context) => [
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: 'option1',
                 child: Text('Option 1', style: TextStyle(fontSize: 10)),
               ),
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: 'option2',
                 child: Text('Option 2', style: TextStyle(fontSize: 10)),
               ),
@@ -29,11 +51,12 @@ class HomeView extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(child: Text('Menu', style: TextStyle(fontSize: 10))),
+            const DrawerHeader(
+                child: Text('Menu', style: TextStyle(fontSize: 10))),
             for (var i = 1; i <= 20; i++)
               ListTile(
                 title: Text('Feature $i (Ctrl+$i)',
-                    style: TextStyle(fontSize: 10)),
+                    style: const TextStyle(fontSize: 10)),
                 onTap: () {
                   // ...handle feature navigation...
                 },
@@ -43,11 +66,21 @@ class HomeView extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Expanded(child: ThreeDPane()),
+          Expanded(child: ThreeDPane(meshColor: _meshColor)),
+          MeshControls(
+            selectedColor: _meshColor,
+            onColorChanged: (color) {
+              setState(() {
+                _meshColor = color;
+              });
+            },
+            onExportPNG: _exportPNG,
+            onExportMP4: _exportMP4,
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: [
+        items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.dashboard, size: 16), label: 'Dash'),
           BottomNavigationBarItem(
@@ -55,8 +88,8 @@ class HomeView extends StatelessWidget {
           BottomNavigationBarItem(
               icon: Icon(Icons.info, size: 16), label: 'Info'),
         ],
-        selectedLabelStyle: TextStyle(fontSize: 10),
-        unselectedLabelStyle: TextStyle(fontSize: 10),
+        selectedLabelStyle: const TextStyle(fontSize: 10),
+        unselectedLabelStyle: const TextStyle(fontSize: 10),
       ),
     );
   }

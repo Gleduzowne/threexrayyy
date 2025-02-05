@@ -3,6 +3,9 @@ import 'dart:math' as math;
 import 'package:vector_math/vector_math_64.dart' as vector;
 
 class Live3DMesh extends StatefulWidget {
+  final Color meshColor;
+  const Live3DMesh({super.key, this.meshColor = Colors.green});
+
   @override
   _Live3DMeshState createState() => _Live3DMeshState();
 }
@@ -33,6 +36,7 @@ class _Live3DMeshState extends State<Live3DMesh> {
           painter: _Live3DMeshPainter(
             rotationX: _rotationX,
             rotationY: _rotationY,
+            meshColor: widget.meshColor,
           ),
           child: Container(),
         ),
@@ -44,13 +48,17 @@ class _Live3DMeshState extends State<Live3DMesh> {
 class _Live3DMeshPainter extends CustomPainter {
   final double rotationX;
   final double rotationY;
+  final Color meshColor;
 
-  _Live3DMeshPainter({required this.rotationX, required this.rotationY});
+  _Live3DMeshPainter(
+      {required this.rotationX,
+      required this.rotationY,
+      required this.meshColor});
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.green.withOpacity(0.7)
+      ..color = meshColor.withOpacity(0.7)
       ..style = PaintingStyle.stroke;
 
     // Define cube vertices.
@@ -103,6 +111,7 @@ class _Live3DMeshPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _Live3DMeshPainter oldDelegate) {
     return oldDelegate.rotationX != rotationX ||
-        oldDelegate.rotationY != rotationY;
+        oldDelegate.rotationY != rotationY ||
+        oldDelegate.meshColor != meshColor;
   }
 }
